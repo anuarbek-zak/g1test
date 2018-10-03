@@ -1,15 +1,15 @@
-var compression = require('compression');
-var express = require('express');
-var router = express.Router();
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var app = express();
+const express = require('express');
+const path = require('path');
 
-app.use(compression());
-app.use(cors());
-app.use(cookieParser());
-app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.set('port', process.env.PORT || 8000);
-// app.use(express.static(path.join(__dirname, 'frontend'), { maxAge: 3600000 }));
+const app = express();
+
+// Serve only the static files form the dist directory
+app.use(express.static(__dirname + '/dist/g1'));
+
+app.get('/*', function(req,res) {
+    
+res.sendFile(path.join(__dirname+'/dist/g1/index.html'));
+});
+
+// Start the app by listening on the default Heroku port
+app.listen(process.env.PORT || 8080);
