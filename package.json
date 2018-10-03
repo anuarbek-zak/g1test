@@ -8,12 +8,12 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "ng build --aot -prod"
+    "postinstall": "ng build --aot"
   },
   "private": true,
   "engines": {
-    "node": "6.11.0",
-    "npm": "3.10.10"
+    "node": "9.4.0",
+    "npm": "5.6.0"
   },
   "dependencies": {
     "@angular/animations": "^6.0.3",
