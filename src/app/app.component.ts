@@ -17,19 +17,15 @@ export class AppComponent implements OnInit {
 	}
 
 	ngOnInit(){
-				this.getData('precipitation')
-
-				this.getData('temperature')
-
+		this.getData('precipitation')
+		this.getData('temperature')
 	}
 
 	getData(fileName){
 		this.http.get(`../assets/${fileName}.json`).subscribe(resp=>{
 			this.mainData[fileName] = resp;
-			console.log(this.mainData)
 			this.createYearsList(resp);
-					this.countAverage(fileName,this.yearFrom,this.yearTo)
-
+			if(fileName=='temperature') this.drawGraph(fileName,this.yearFrom,this.yearTo)
 		});
 	}
 
@@ -41,9 +37,8 @@ export class AppComponent implements OnInit {
 		}
 	}
 
-	countAverage(fileName,yearFrom,yearTo){
-		if(yearTo<yearFrom) return;
-		console.log(this.mainData,fileName,this.mainData[fileName])
+	drawGraph(fileName,yearFrom,yearTo){
+		if(yearTo<=yearFrom) return;
 		var yearsAvg = {};
 		var prevYear = (new Date(this.mainData[fileName][0].t)).getFullYear(),
 		total = 0,
@@ -62,8 +57,6 @@ export class AppComponent implements OnInit {
 				count = 0;
 			}
 		}
-
-		console.log(yearsAvg)
 
 		var ctx = (<HTMLCanvasElement>document.getElementById('myChart')).getContext('2d');
 		var myLineChart = new Chart(ctx, {

@@ -2,8 +2,8 @@
 <div >
   <h1>Архив метеослужбы</h1>
   <div >
-    <button (click)="countAverage('temperature',yearFrom,yearTo)" type="button" class="btn btn-primary">Температура</button>
-    <button (click)="countAverage('precipitation',yearFrom,yearTo)" type="button" class="btn btn-success ml-3">Осадки</button>
+    <button (click)="drawGraph('temperature',yearFrom,yearTo)" type="button" class="btn btn-primary">Температура</button>
+    <button (click)="drawGraph('precipitation',yearFrom,yearTo)" type="button" class="btn btn-success ml-3">Осадки</button>
   </div>
   <div class="d-flex w-25 mt-2">
   <select [(ngModel)]="yearFrom" class="custom-select" id="inputGroupSelect01">
