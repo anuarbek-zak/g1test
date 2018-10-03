@@ -12,19 +12,24 @@ export class AppComponent implements OnInit {
 	years:any = [];
 	yearFrom = 0;
 	yearTo = 0;
-
+	mainData = {}
 	constructor(private http: HttpClient) {
 	}
 
 	ngOnInit(){
-		this.getData('temperature')
+				this.getData('precipitation')
+
+				this.getData('temperature')
+
 	}
 
 	getData(fileName){
 		this.http.get(`../assets/${fileName}.json`).subscribe(resp=>{
-			console.log(resp)
-			if(this.years.length==0) this.createYearsList(resp);
-			this.countAverage(resp,this.yearFrom,this.yearTo)
+			this.mainData[fileName] = resp;
+			console.log(this.mainData)
+			this.createYearsList(resp);
+					this.countAverage(fileName,this.yearFrom,this.yearTo)
+
 		});
 	}
 
@@ -36,17 +41,18 @@ export class AppComponent implements OnInit {
 		}
 	}
 
-	countAverage(data,yearFrom,yearTo){
+	countAverage(fileName,yearFrom,yearTo){
 		if(yearTo<yearFrom) return;
+		console.log(this.mainData,fileName,this.mainData[fileName])
 		var yearsAvg = {};
-		var prevYear = (new Date(data[0].t)).getFullYear(),
+		var prevYear = (new Date(this.mainData[fileName][0].t)).getFullYear(),
 		total = 0,
 		count = 0;
-		for(var i=0;i<data.length;i++){
-			var currentYear = (new Date(data[i].t)).getFullYear();
+		for(var i=0;i<this.mainData[fileName].length;i++){
+			var currentYear = (new Date(this.mainData[fileName][i].t)).getFullYear();
 			if(prevYear==currentYear){
 				if(yearFrom<=currentYear && currentYear<=yearTo){
-					total+=data[i].v;
+					total+=this.mainData[fileName][i].v;
 					count++;
 					yearsAvg[prevYear] = total/count;
 				}
