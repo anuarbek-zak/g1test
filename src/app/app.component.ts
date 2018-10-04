@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
 	}
 
 	getData(fileName){
-		this.http.get(`../assets/${fileName}.json`).subscribe(resp=>{
+		this.http.get(`/api/data/${fileName}`).subscribe(resp=>{
 			this.mainData[fileName] = resp;
 			if(fileName=='temperature') this.createYearsList(resp);
 		});
