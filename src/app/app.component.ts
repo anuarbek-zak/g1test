@@ -12,20 +12,21 @@ export class AppComponent implements OnInit {
 	years:any = [];
 	yearFrom = 0;
 	yearTo = 0;
-	mainData = {}
+	mainData = {};
+	currentGraphType = '';
+
 	constructor(private http: HttpClient) {
 	}
 
 	ngOnInit(){
-		this.getData('precipitation')
 		this.getData('temperature')
+		this.getData('precipitation')
 	}
 
 	getData(fileName){
 		this.http.get(`../assets/${fileName}.json`).subscribe(resp=>{
 			this.mainData[fileName] = resp;
-			this.createYearsList(resp);
-			if(fileName=='temperature') this.drawGraph(fileName,this.yearFrom,this.yearTo)
+			if(fileName=='temperature') this.createYearsList(resp);
 		});
 	}
 
@@ -35,10 +36,12 @@ export class AppComponent implements OnInit {
 		for(var i=this.yearFrom;i<=this.yearTo;i+=1){
 			this.years.push(i);
 		}
+		this.drawGraph('temperature')
 	}
 
-	drawGraph(fileName,yearFrom,yearTo){
-		if(yearTo<=yearFrom) return;
+	drawGraph(fileName){
+		if(this.yearTo<=this.yearFrom) return;
+		this.currentGraphType = fileName;
 		var yearsAvg = {};
 		var prevYear = (new Date(this.mainData[fileName][0].t)).getFullYear(),
 		total = 0,
@@ -46,7 +49,7 @@ export class AppComponent implements OnInit {
 		for(var i=0;i<this.mainData[fileName].length;i++){
 			var currentYear = (new Date(this.mainData[fileName][i].t)).getFullYear();
 			if(prevYear==currentYear){
-				if(yearFrom<=currentYear && currentYear<=yearTo){
+				if(this.yearFrom<=currentYear && currentYear<=this.yearTo){
 					total+=this.mainData[fileName][i].v;
 					count++;
 					yearsAvg[prevYear] = total/count;
@@ -57,7 +60,6 @@ export class AppComponent implements OnInit {
 				count = 0;
 			}
 		}
-
 		var ctx = (<HTMLCanvasElement>document.getElementById('myChart')).getContext('2d');
 		var myLineChart = new Chart(ctx, {
 			type: 'line',
